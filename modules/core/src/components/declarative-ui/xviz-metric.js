@@ -48,6 +48,7 @@ class XVIZMetricComponent extends PureComponent {
     streams: PropTypes.arrayOf(PropTypes.string).isRequired,
     title: PropTypes.string,
     description: PropTypes.string,
+    missingData: PropTypes.arrayOf(PropTypes.string),
 
     // From connected log
     currentTime: PropTypes.number,
@@ -125,13 +126,22 @@ class XVIZMetricComponent extends PureComponent {
       formatValue,
       horizontalGridLines,
       verticalGridLines,
-      getColor
+      getColor,
+      streams
     } = this.props;
     const isLoading = currentTime === null;
     const timeDomain = Number.isFinite(startTime) ? [startTime, endTime] : null;
+    const {timeSeries} = this.state;
+    const missingStreams = streams.filter(streamToDisplay => !timeSeries.data[streamToDisplay]);
 
     return (
-      <MetricCard title={title} description={description} isLoading={isLoading} style={style}>
+      <MetricCard
+        title={title}
+        description={description}
+        isLoading={isLoading}
+        style={style}
+        missingData={missingStreams}
+      >
         {!isLoading && (
           <MetricChart
             {...this.state.timeSeries}

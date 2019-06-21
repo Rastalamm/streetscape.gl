@@ -49,6 +49,7 @@ class XVIZPlotComponent extends PureComponent {
     description: PropTypes.string,
     independentVariable: PropTypes.string,
     dependentVariables: PropTypes.arrayOf(PropTypes.string),
+    missingData: PropTypes.arrayOf(PropTypes.string),
 
     // From connected log
     metadata: PropTypes.object,
@@ -185,6 +186,8 @@ class XVIZPlotComponent extends PureComponent {
     } = this.props;
 
     const dataProps = this._extractDataProps();
+    const {dependentVariables} = this.state;
+    const missingStreams = Object.keys(dependentVariables).filter(dv => !dependentVariables[dv]);
 
     return (
       <MetricCard
@@ -192,6 +195,7 @@ class XVIZPlotComponent extends PureComponent {
         description={description}
         style={style}
         isLoading={dataProps.isLoading}
+        missingData={missingStreams}
       >
         <MetricChart
           {...dataProps}
