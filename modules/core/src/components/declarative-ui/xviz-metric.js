@@ -25,6 +25,7 @@ import {MetricCard, MetricChart} from '@streetscape.gl/monochrome';
 import {DEFAULT_COLOR_SERIES} from './constants';
 import connectToLog from '../connect';
 import {getTimeSeries} from '../../utils/metrics-helper';
+import {MissingDataCard} from './missing-data-card';
 
 const defaultFormatValue = x => (Number.isFinite(x) ? x.toFixed(3) : String(x));
 
@@ -135,13 +136,8 @@ class XVIZMetricComponent extends PureComponent {
     const missingStreams = streams.filter(streamToDisplay => !timeSeries.data[streamToDisplay]);
 
     return (
-      <MetricCard
-        title={title}
-        description={description}
-        isLoading={isLoading}
-        style={style}
-        missingData={missingStreams}
-      >
+      <MetricCard title={title} description={description} isLoading={isLoading} style={style}>
+        {missingStreams.length && <MissingDataCard style={style} missingData={missingStreams} />}
         {!isLoading && (
           <MetricChart
             {...this.state.timeSeries}

@@ -24,6 +24,7 @@ import {MetricCard, MetricChart} from '@streetscape.gl/monochrome';
 
 import {DEFAULT_COLOR_SERIES} from './constants';
 import connectToLog from '../connect';
+import {MissingDataCard} from './missing-data-card';
 
 const GET_X = d => d[0];
 const GET_Y = d => d[1];
@@ -188,6 +189,10 @@ class XVIZPlotComponent extends PureComponent {
     const dataProps = this._extractDataProps();
     const {dependentVariables} = this.state;
     const missingStreams = Object.keys(dependentVariables).filter(dv => !dependentVariables[dv]);
+    /*
+      TODO: Add missing independent variables to missingStreams above
+      independent variables might just be timestamps.. don't need to know about each one?
+    */
 
     return (
       <MetricCard
@@ -195,8 +200,8 @@ class XVIZPlotComponent extends PureComponent {
         description={description}
         style={style}
         isLoading={dataProps.isLoading}
-        missingData={missingStreams}
       >
+        {missingStreams.length && <MissingDataCard style={style} missingData={missingStreams} />}
         <MetricChart
           {...dataProps}
           getColor={getColor}
